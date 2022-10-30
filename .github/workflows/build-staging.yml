@@ -37,8 +37,20 @@ jobs:
           # List of tags
           tags: ${{secrets.ACR_NAME}}/contoso-website:latest
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: build_push_image # Will wait for the execution of the previous job
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Install Helm
+        uses: Azure/setup-helm@v3
+        with:
+          version: v3.3.1
+      - name: Get AKS Credentials
+        uses: Azure/k8s-set-context@v3.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: mslearn-gh-pipelines-30928
+          cluster-name: contoso-video
