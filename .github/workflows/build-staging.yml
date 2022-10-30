@@ -43,7 +43,7 @@ jobs:
 
       - name: Run Helm Deploy
         run: |
-          helm upgrade \
+          helm upgrade --force \
             --install \
             --create-namespace \
             --atomic \
